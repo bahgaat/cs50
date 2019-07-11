@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+    <!-- http://getbootstrap.com/docs/4.1/content/typography/ -->
+    <h1 class="mb-3">Form</h1>
+
+    <!-- http://getbootstrap.com/docs/4.1/components/forms/ -->
+    <form onsubmit="return validation()"; action="/form" method="post">
+      <div class="form-row align-items-center">
+      <div class="col-auto my-1">
+        <input id="name" type="text" class="form-control" name="name" value="Name"><br>
+        <label class="mr-sm-2 sr-only" for="inlineFormCustomSelect"></label>
+        <select name="select" id="house" class="custom-select mr-sm-2">
+            <option  value=""selected disabled hidden>House</option>
+            <option  value="MasrElGedida">MasrElgedida</option>
+            <option  value="Nasr city">NasrCity</option>
+            <option  value="ElMaadi">ElMaadi</option>
+            <option  value="6 October">6 October</option>
+            <br>
+        </select>
+      </div>
+      </div>
+        <br>
+        <input id="Manager" type="radio" name="position" value="Manager">Manager<br>
+        <input id="Employee"type="radio" name="position" value="Employee">Employee<br>
+        <input id="CEO"     type="radio" name="position" value="CEO">CEO<br>
+        <input id="Servant" type="radio" name="position" value="Servant">Servant<br>
+        <br>
+
+
+
+
+
+
+        <!-- TODO -->
+
+        <!-- http://getbootstrap.com/docs/4.1/components/buttons/ -->
+        <button class="btn btn-primary" type="submit">Submit</button>
+
+    </form>
+
+    <script>
+
+        function validation()
+        {
+            var name = document.getElementById("name");
+            var house = document.getElementById("house");
+            var manager = document.getElementById("Manager").checked;
+            var employee = document.getElementById("Employee").checked;
+            var ceo = document.getElementById("CEO").checked;
+            var servant = document.getElementById("Servant").checked;
+            if ((name.value == "Name") || (name.value == ""))
+            {
+                alert("Enter your name");
+                return false;
+            }
+            else if (house.value == "")
+            {
+                alert("Enter your house");
+                return false;
+            }
+            else if ((manager=="") && (employee=="") && (ceo=="") && (servant==""))
+            {
+                alert("Enter your position");
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
+
+        }
+
+    </script>
+
+{% endblock %}

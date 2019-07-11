@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    history
+{% endblock %}
+
+{% block main %}
+
+<form action="/diet" method="GET">
+    <h1 class="mb-3">Plan</h1>
+    <table class="table">
+        <thead class= "thead-dark">
+        
+       
+        <tr>
+            <th>Breakfast</th>
+            <th>Dinner</th>
+            <th>Lunch</th>
+            <th>Snacks</th>
+            <th>Calories</th>
+            <th>Fat(grams)</th>
+            <th>Carb(grams)</th>
+            <th>Protein(grams)</th>
+            <th>Totalgoalcalories</th>
+            <th>Totalgoalfat in grams</th>
+            <th>Totalgoalcarb in grams</th>
+            <th>Totalgoalprotein in grams</th>
+            <th>Caloriesconsumed</th>
+            <th>Remainingcalories</th>
+            <th>Fatconsumed in grams</th>
+            <th>Remainingfat in grams</th>
+            <th>Carbconsumed in grams</th>
+            <th>Remainingcarb in grams</th>
+            <th>Proteinconsumed in grams</th>
+            <th>Remainingprotein in grams</th>
+            <th>date</th>
+            <th>Startdate</th>
+        </tr>
+       
+        
+        </thead>
+        <tbody>
+        {% for food in updateusersgoal %}
+        <tr> 
+             
+             <td>{{food.Breakfast}}</td>
+             <td>{{food.Dinner}}</td> 
+             <td>{{food.Lunch}}</td>
+             <td>{{food.Snacks}}</td>
+             <td>{{food.Calories}}</td>
+             <td>{{food.Fat}}</td>
+             <td>{{food.Carb}}</td>
+             <td>{{food.Protein}}</td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             
+             
+        </tr>
+        {% endfor %}
+        <tr>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td></td>
+             <td>{{Totalgoalcalories}}</td>
+             <td>{{Totalgoalfat}}</td>
+             <td>{{Totalgoalcarb}}</td>
+             <td>{{Totalgoalprotein}}</td>
+             <td>{{Caloriesconsumed}}</td>
+             <td>{{Remainingcalories}}</td>
+             <td>{{Fatconsumed}}</td>
+             <td>{{Remainingfat}}</td>
+             <td>{{Carbconsumed}}</td>
+             <td>{{Remainingcarb}}</td>
+             <td>{{Proteinconsumed}}</td>
+             <td>{{Remainingprotein}}</td>
+             <td>{{todaydate}}</td>
+             <td>{{startdate}}</td>
+       </tr>
+        </tbody>
+            
+    </table>
+</form>
+{% endblock %}
+         

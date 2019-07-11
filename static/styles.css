@@ -1,0 +1,46 @@
+nav .nav-brand
+{
+    font-size: xx-large;
+}
+
+nav .nav-brand .blue
+{
+    color: #537fbe;
+}
+
+main .form-control
+{
+    display: inline-block;
+    width: auto;
+}
+
+main
+{
+    overflow-x: auto;
+    text-align:left;
+}
+
+main img
+{
+    max-width:100%;
+}
+
+.food
+{
+    text-align:left;
+}
+
+#quantity
+{
+    text-align:left;
+}
+
+.Meal
+{
+    text-align:left;
+}
+
+.mb-3
+{
+    text-align: center;
+}

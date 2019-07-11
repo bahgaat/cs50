@@ -1,0 +1,41 @@
+.image4
+{
+    text-align:center;
+}
+body
+{
+    background-color:lightgray;
+}
+tr
+{
+    00px;
+}
+td
+{
+    background-color:darkgray;
+    color:black;
+    font-size:15pt;
+    font-family:georgia;
+}
+ol
+{
+    background:lightgray;
+    padding:20px;
+}
+ol li
+{
+    background:darkgray;
+    margin:5px;
+}
+a
+{
+    color:black;
+}
+a:link,a:visited
+{
+    color:black;
+}
+a:hover,a:active
+{
+    color:black;
+}

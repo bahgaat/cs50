@@ -1,0 +1,45 @@
+body{
+    background-color: lightblue;
+}
+
+.image
+{
+    text-align:center;
+}
+
+h1{
+    text-align:center;
+}
+
+.goals
+{
+    border:0px white;
+}
+
+
+tr
+{
+    height:00px;
+}
+td
+{
+    background-color:lightBlue;
+    color:black;
+    font-size:12pt;
+    font-family:georgia;
+
+}
+a
+{
+   color:blue;
+}
+a:link,a:visited
+{
+    color:blue;
+
+}
+a:hover,a:active
+{
+    color:darkblue;
+}
+

@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}
+     sell
+{% endblock %}
+
+{% block main %}
+
+    <form action="/sell" method="POST">
+        <div class="form-group">
+             <input class= "form-control" name="stock" placeholder="What a stock you want to sell">
+        </div>
+        <div class="form-group">
+            <input class= "form-control" name="shares" placeholder="How many shares">
+        </div>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+
+{% endblock %}

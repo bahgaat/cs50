@@ -1,0 +1,462 @@
+import os
+
+from cs50 import SQL
+from flask import Flask, flash, jsonify, redirect, render_template, request, session
+from flask_session import Session
+from tempfile import mkdtemp
+from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
+from werkzeug.security import check_password_hash, generate_password_hash
+
+from helpers import apology, login_required, lookup, usd
+from itertools import chain
+
+# Configure application
+app = Flask(__name__)
+
+# Ensure templates are auto-reloaded
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+# Ensure responses aren't cached
+@app.after_request
+def after_request(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
+
+# Custom filter
+app.jinja_env.filters["usd"] = usd
+
+# Configure session to use filesystem (instead of signed cookies)
+app.config["SESSION_FILE_DIR"] = mkdtemp()
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+
+# Configure CS50 Library to use SQLite database
+db = SQL("sqlite:///finance.db")
+
+
+@app.route("/")
+@login_required
+def index():
+
+    # arrange the data into group and name it stocks
+    stocks = db.execute("SELECT Symbol,Name,Shares FROM portfolio WHERE id=:id",
+    id=session["user_id"])
+
+
+    # obtaining the cash form the database table name users
+    result = db.execute("SELECT cash FROM users WHERE id=:id",
+    id=session["user_id"])
+    cash = result[0]
+    y = cash["cash"]
+    cashs= float(y)
+
+    grandtotal = cashs
+
+    #delete the data from newportfolio.
+    delete = db.execute("DELETE FROM newportfolio WHERE id=:id",
+    id=session["user_id"])
+
+
+    #obtaining the current price of every stock
+    for stock in stocks:
+
+        symbol = str(stock["Symbol"])
+        name = str(stock["Name"])
+        shares = int(stock["Shares"])
+        quote = lookup(name)
+        price = float(quote["price"])
+        Total = float(price * shares)
+        grandtotal += Total
+        share = str(shares)
+
+
+        #add all the new products and their price to the newportfolio table
+        newportfolio = db.execute("INSERT INTO newportfolio(name,symbol,shares,price,total,id)VALUES(:name,:symbol,:shares,:price,:Total,:id)",
+        symbol=symbol,name=name,shares=share,price=price,Total=Total,
+        id=session["user_id"])
+
+    #select the products from the table newportfolio to display through index.html
+    newportfolio2 = db.execute("SELECT Name,Symbol,Shares,price,Total FROM newportfolio WHERE id=:id",
+    id=session["user_id"])
+
+
+    return render_template("index.html",newportfolio=newportfolio2,total=usd(grandtotal),cash=usd(cashs))
+
+
+
+
+@app.route("/buy", methods=["GET", "POST"])
+@login_required
+def buy():
+    #if user reached via post
+    if request.method == "POST":
+        #make variables to facilitate it to me
+        stock = request.form.get("stock")
+        shares = request.form.get("shares")
+        int_shares = int(shares)
+
+        # Ensure stock is submitted
+        if not stock:
+            return apology("must write a name of a stock",403)
+
+        # Ensure number of shares is submittes
+        elif not shares :
+            return apology("must provide how many do you want to purchase",403)
+
+        #Ensure that the number is positive
+        elif int_shares < 1 :
+            return apology("must be a positive number",403)
+
+
+        #select their money from the database
+        list = db.execute("SELECT cash FROM users WHERE id=:id",
+        id=session["user_id"])
+        t = list[0]
+        y = t['cash']
+        r = int(y)
+
+        #obtain the price,name, and symbol of the product form lookup function
+        dict ={}
+        dict = lookup(stock)
+        price = dict['price']
+        symbol  = dict['symbol']
+        name = dict['name']
+        total = price*int_shares
+
+        #obtain the Names from the database and make list of them
+        Names = db.execute("SELECT Name FROM portfolio WHERE id=:id",
+        id=session["user_id"])
+
+        #making a list of Names from the database
+        list = []
+        for x in Names:
+            Name = x["Name"]
+            if (stock == Name):
+                list.append(Name)
+        stocks = list
+
+
+        #check that the user has enough money and if the stock is in stocks
+        if (total<=r and stock in stocks ):
+
+            newshare = db.execute("UPDATE portfolio set Shares = Shares+:int_shares , Total=:total+Total , datetime=datetime('now') WHERE Name=:stock AND id=:id ",
+            stock=stock,int_shares=int_shares,total=total,id=session["user_id"])
+
+            newshare2 =db.execute("UPDATE newportfolio set Shares = Shares+:int_shares , Total=:total+Total WHERE Name=:stock AND id=:id",
+            stock=stock,int_shares=int_shares,total=total,id=session["user_id"])
+
+            newportfolio3 = db.execute("SELECT Name,Symbol,Shares,price,Total FROM newportfolio WHERE id=:id",
+            id=session["user_id"])
+
+            #update user cash
+            update = db.execute("UPDATE users SET cash = :r - :total WHERE id=:id",
+            r=r,total=total,id=session["user_id"])
+
+
+        elif (total <= r and stock not in stocks) :
+
+
+            #add the stock name and the username and the price to the portfolio database
+            portfolio = db.execute("INSERT INTO portfolio(symbol,name,shares,price,total,id,Situation,datetime)VALUES(:name,:symbol,:int_shares,:price,:total,:id,'Bought',datetime('now'))",
+            symbol=symbol,name=name,int_shares=int_shares,price=price,total=total,id=session["user_id"])
+
+
+
+            #add the stock name and the username and the price to the newportfolio database
+            newportfolio = db.execute("INSERT INTO newportfolio(symbol,name,shares,price,total,id)VALUES(:name,:symbol,:int_shares,:price,:total,:id)",
+            symbol=symbol,name=name,int_shares=int_shares,price=price,total=total,id=session["user_id"])
+
+            #update user cash
+            update = db.execute('UPDATE users SET cash = :r - :total WHERE id=:id',
+            r = r, total=total,id=session["user_id"])
+
+            #select form newportfolio
+            newportfolio3 = db.execute("SELECT Name,Symbol,Shares,price,Total FROM newportfolio WHERE Name=Name AND id=:id GROUP BY Name,Symbol,Shares,Price,Total",
+            id=session["user_id"])
+        if (total <=r ):
+
+
+
+            #bring cash from users table
+            result = db.execute("SELECT cash FROM users WHERE id=:id",
+            id=session["user_id"])
+            cash = result[0]
+            y = cash["cash"]
+            cashs = float(y)
+
+            #add all the total form newportfolio table
+            total0 = db.execute("SELECT SUM(Total) FROM newportfolio WHERE id=:id",
+            id=session["user_id"])
+            total2 = total0[0]
+            x = total2["SUM(Total)"]
+            total3 = float(x)
+            grandtotal = total3 + cashs
+
+            #insert data into the history table
+            Table = db.execute(" SELECT datetime FROM portfolio WHERE Name=:stock AND id=:id",
+            stock=stock,id=session["user_id"])
+            date = Table[0]
+            date2= date["datetime"]
+
+
+            History = db.execute("INSERT INTO History(Name,Price,Shares,Total,id,Situation,datetime)VALUES(:stock,:price,:int_shares,:total,:id,'bought',:date2)",
+            stock=stock,price=price,int_shares=int_shares,total=total,date2=date2,id=session["user_id"])
+
+            return render_template("index.html",newportfolio=newportfolio3,cash=usd(cashs),total=usd(grandtotal))
+        else:
+            return apology("not enough money",403)
+
+
+
+    #if user via get means without clicking submit
+    else:
+        return render_template("buy.html")
+
+
+@app.route("/check", methods=["GET"])
+def check():
+
+    #getting username from the html
+    username = request.form['name']
+
+    #getting all the usersname from the database
+    users = db.execute("SELECT username FROM users")
+    list1=list()
+    for name in users:
+        name2 = name["username"]
+        list1.append(name2)
+    names = list1
+    print(names)
+    username2 = str(username)
+
+    #ensure the name exists or no
+    if username in names:
+        return jsonify({'false' : 'Not Available username'})
+    elif username not in names:
+        return jsonify({'true' : 'Available username'})
+
+
+    #return redirect("/")
+
+@app.route("/history")
+@login_required
+def history():
+
+
+    History = db.execute("SELECT * FROM History WHERE id=:id",
+    id=session["user_id"])
+    return render_template('history.html',History=History)
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    """Log user in"""
+
+    # Forget any user_id
+    session.clear()
+
+    # User reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+
+        # Ensure username was submitted
+        if not request.form.get("username"):
+            return apology("must provide username", 403)
+
+        # Ensure password was submitted
+        elif not request.form.get("password"):
+            return apology("must provide password", 403)
+
+        # Query database for username
+        rows = db.execute("SELECT * FROM users WHERE username = :username",
+                          username=request.form.get("username"))
+
+        # Ensure username exists and password is correct
+        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+            return apology("invalid username and/or password", 403)
+
+        # Remember which user has logged in
+        session["user_id"] = rows[0]["id"]
+
+        # Redirect user to home page
+        return redirect("/")
+
+    # User reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
+
+
+@app.route("/quote", methods=["GET", "POST"])
+#@login_required
+def quote():
+    if request.method == "POST":
+        if not request.form.get("symbol"):
+            return apology("choose a stock", 403)
+        dict = {}
+        symbol = request.form.get("symbol")
+        dict = lookup(symbol)
+        return render_template("stock.html",stock = dict)
+    else:
+        return render_template("quote.html")
+
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+
+    """Register user"""
+    if request.method == "POST":
+
+        if not request.form.get("username"):
+            return apology("must provide username", 403)
+        elif not request.form.get("password"):
+            return apology("must provide password", 403)
+        elif not request.form.get("re confirm password"):
+            return apology("must reconfirm password", 403)
+        elif request.form.get("password") != request.form.get("re confirm password"):
+            return apology("password must be the same ",403)
+
+        hash=generate_password_hash(request.form.get("password"))
+
+        result = db.execute(
+        "INSERT INTO users (username,hash)VALUES(:username,:hash)",
+        username = request.form.get("username"), hash =hash)
+
+        if not result:
+            return apology("Try another username",403)
+
+        session["user_id"] = result
+
+        return redirect("/")
+
+    else:
+
+        return render_template("register.html")
+
+
+@app.route("/sell", methods=["GET", "POST"])
+@login_required
+def sell():
+    #if user via post
+    if request.method == "POST":
+
+        #get a stock
+        stock = request.form.get("stock")
+
+        #check that stock is submitted
+        if not stock:
+            return apology("Must enter a stock name",403)
+
+
+        #bring all the Names from the database
+        stocks = db.execute("SELECT Name FROM newportfolio WHERE id=:id",
+        id=session["user_id"])
+
+        #obtaining the Names without hashing
+        list = []
+        for x in stocks:
+            stock2 = x["Name"]
+            list.append(stock2)
+        Names = list
+
+        #iterate to see if what the user submitted is available
+        if stock not in Names:
+            return apology("not available",403)
+
+        #know how many shares
+        shares = request.form.get("shares")
+
+        #translate shares into integer
+        int_shares = int(shares)
+
+        #obtain the price of the stock
+        quote = lookup(stock)
+        price = float(quote["price"])
+        total = float(price*int_shares)
+
+        #check shares
+        if not shares:
+             return apology("Must enter shares",403)
+
+        #Check shares is positive
+        elif int_shares<1:
+            return apology("Must be positive",403)
+
+        #select the shares of the stock
+        shares  = db.execute("SELECT Shares FROM portfolio WHERE Name = :stock AND id=:id ",
+        stock=stock,id=session["user_id"])
+
+        #remove the hash from the shares
+        share = shares[0]
+        share2 = share["Shares"]
+        share3 = int(share2)
+
+
+        #ensure that there is enough shares
+        if int_shares > share3:
+            return apology("There is not enough shares",403)
+
+        #update shares and datetime in the portfolio
+        updateshare = db.execute("UPDATE portfolio set Shares=Shares-:int_shares,Total=Total-:total,datetime=datetime('now') WHERE Name = :stock AND id=:id",
+        stock=stock,int_shares=int_shares,total=total,id=session["user_id"])
+
+        #select the updateshare from the portfolio
+        updateshare2 = db.execute("SELECT Shares FROM portfolio WHERE Name = :stock AND id=:id ",
+        stock=stock,id=session["user_id"])
+
+        #remove the hash
+        updateshare3 = updateshare2[0]
+        updateshare4 = updateshare3["Shares"]
+        updateshare5 = int(updateshare4)
+
+        #update cash
+        updatecash = db.execute("UPDATE users SET cash=cash+:total WHERE id=:id",
+        total=total,id=session["user_id"])
+
+        #see if the updateshare is 0 delete
+        if updateshare5 == 0 :
+            Delete = db.execute("DELETE FROM portfolio WHERE Name=:stock AND id=:id ",
+            stock=stock,id=session["user_id"])
+
+        #obtain datetime from portfolio
+        date = db.execute("SELECT datetime FROM portfolio WHERE Name=:stock AND id=:id",
+        stock=stock,id=session["user_id"])
+        date2 = date[0]
+        date3 = date2["datetime"]
+
+        #insert into history table
+        History = db.execute("INSERT INTO History (Name,Price,Shares,Total,id,Situation,datetime)VALUES(:stock,:price,:int_shares,:total,:id,'sold',:date3)",
+        stock=stock,price=price,int_shares=int_shares,total=total,date3=date3,id=session["user_id"])
+
+        History2 = db.execute("SELECT * FROM History WHERE id=:id",
+        id=session["user_id"])
+
+        return render_template("history.html",History=History2)
+    #if user via get
+    else:
+        return render_template("sell.html")
+
+def errorhandler(e):
+    """Handle error"""
+    if not isinstance(e, HTTPException):
+        e = InternalServerError()
+    return apology(e.name, e.code)
+
+
+# Listen for errors
+for code in default_exceptions:
+    app.errorhandler(code)(errorhandler)

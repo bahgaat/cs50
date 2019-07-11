@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    portfolio
+{% endblock %}
+
+{% block main %}
+<form action="/index" method="GET">
+    <h1 class="mb-3">portfolio</h1>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Symbol</th>
+                    <th>Name</th>
+                    <th>Shares</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            {% for stockss in newportfolio %}
+            <tr>
+                    <td>{{ stockss.Symbol }}</td>
+                    <td>{{ stockss.Name }}</td>
+                    <td>{{ stockss.Shares}}</td>
+                    <td>{{ stockss.Price}}</td>
+                    <td>{{ stockss.Total }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td>CASH </td>
+                <td></td>
+                <td></td>
+                <td>{{ sum }}</td>
+                <td>{{ cash }}</td>
+
+
+            </tr>
+
+
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{total}}</td>
+            </tr>
+
+
+            </tbody>
+        </table>
+</form>
+{% endblock %}

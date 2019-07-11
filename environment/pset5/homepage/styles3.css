@@ -1,0 +1,43 @@
+h1
+{
+    text-align:center;
+    border: 2px dashed peru;
+    border-radius:5px;
+}
+.image
+{
+    text-align:center;
+}
+body
+{
+    background-color:wheat;
+}
+tr
+{
+    00px;
+}
+td
+{
+    background-color:peru;
+    color:black;
+    font-size:15pt;
+    font-family:georgia;
+}
+ol
+{
+    list-style-type:circle;
+
+}
+a
+{
+    color:sienna;
+}
+a:link,a:visited
+{
+    color:sienna;
+}
+a:hover,a:active
+{
+    color:brown;
+}
+

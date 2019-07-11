@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+     stock
+{% endblock %}
+
+{% block main %}
+<form action="/quote" method="Get">
+    <h1 class="mb-3">finance</h1>
+       <table class="table">
+           <thead class="thead-dark">
+               <tr>
+                   <th>Name</th>
+                   <th>Price</th>
+                   <th>Symbol</th>
+               </tr>
+               </thead>
+               <tbody>
+                   <tr>
+                       <td>{{ name }}</td>
+                       <td>{{ price) }}</td>
+                       <td>{{ symbol }}</td>
+                   </tr>
+               </tbody>
+       </table>
+</form>
+
+{% endblock %}

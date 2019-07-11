@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    New Plan
+{% endblock %}
+
+{% block main %}
+
+  <form id="changes" action = "/changes"  method="POST">
+      <h4>Congratulations, you have completed your {{endofdiet}} months diet plan.You are supposed to be {{goalweight}} now.</h4>
+      <p><b>Here, you could make another plan.</b></p>
+         <div class="form-group">
+             <input class="form-control" name="newweight" placeholder="Newweight" type="text">
+         </div>
+         <div class="form-group">
+             <input class="form-control" name="newheight" placeholder="Newheight" type="text"><br>
+         </div>
+         <div class="form-group">
+              <input class="form-control" name="age" placeholder="age" type="text">
+         </div>
+         <div>
+              <h4>Choose your new body percentage fat.</h4>
+              <h4>if you are Male:</h4>
+              <input id="10-14" type="radio" name="newbodyfat" value="10-14">10-14<br>
+              <input id="15-20" type="radio" name="newbodyfat" value="15-20">15-20<br>
+              <input id="21-28" type="radio" name="newbodyfat" value="21-28">21-28<br>
+              <input id="over28" type="radio" name="newbodyfat" value="over28">over 28<br>
+              <h4>if you are Female:</h4>
+              <input id="14-18" type="radio" name="newbodyfat" value="14-18">14-18<br>
+              <input id="19-28" type="radio" name="newbodyfat" value="19-28">19-28<br>
+              <input id="29-38" type="radio" name="newbodyfat" value="29-38">29-28<br>
+              <input id="over38" type="radio" name="newbodyfat" value="over38">over 38<br>
+          </div>
+          
+          <div>
+              <h4>Choose your new daily activity level,if your activity is the same,Choose the same option of the past schedule:</h4>
+              <input id="verylight" type="radio" name="newactivity" value="verylight" >(Very Light)-Typical office job(sitting,studying,little walking throught the day<br>
+              <input id="light" type="radio" name="newactivity" value="light">(Light)-Any job where you mostly stand or walk(teaching,shop/lab work,some walking throughtout the day) <br>
+              <input id="moderate" type="radio" name="newactivity" value="moderate" >(Moderate)-Jobs requiring physical activity(landscaping,cleaning,maintenance,jogging/biking/workingout 2 hours/day)<br>
+              <input id="heavy" type="radio" name="newactivity" value="heavy">(Heavy)-Heavy manual labor(construction,dancer,athlete,hard physical activity min. 4hours/day)<br>
+              <input id="veryheavy" type="radio" name="newactivity" value="veryheavy">(Very Heavy)-Moderate to hard physical activity min. 8 hours/day<br>
+          </div>
+          <div>
+              <h4>Choose your new goal:</h4>
+              <input id="losekg" type="radio" name="newgoal" value="lose0.25kg">lose 0.25 kg aweek<br>
+              <input id="losekgs"  type="radio" name="newgoal" value="lose0.5kg">lose 0.5 kg aweek<br>
+              <input id="maintainmyweight" type="radio" name="newgoal" value="maintainmyweight">maintan my weight<br>
+              <input id="gainkg" type="radio" name="newgoal" value="gain0.25kg">gain 0.25 kg aweek<br>
+              <input id="gainkgs" type="radio" name="newgoal" value="gain0.5kg">gain 0.5 kg aweek<br>
+          </div>
+          <br>
+    
+          <div>
+              <h4>How many months do you want this diet to last.</h4>
+          <div class="form-group">
+             <input class="form-control" name="endofdiet" placeholder="How many months do you want this diet to last." type="text"><br>
+          </div>
+          
+          
+         <button  id="changes" class="btn btn-primary" type="submit">New plan</button></a>
+     </form>
+
+{% endblock %}

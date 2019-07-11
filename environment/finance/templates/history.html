@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}
+<form action ="/history" method="GET">
+    <h1 class = "mb-3">History</h1>
+        <table class = "table">
+            <thead class = "thead-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Shares</th>
+                    <th>Total</th>
+                    <th>id</th>
+                    <th>Situation</th>
+                    <th>datetime</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for x in History %}
+                <tr>
+                    <td>{{x.Name}}</td>
+                    <td>{{x.Price}}</td>
+                    <td>{{x.Shares}}</td>
+                    <td>{{x.Total}}</td>
+                    <td>{{x.id}}</td>
+                    <td>{{x.Situation}}</td>
+                    <td>{{x.datetime}}</td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+</form>
+{% endblock %}

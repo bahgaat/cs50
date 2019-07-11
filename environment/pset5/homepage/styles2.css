@@ -1,0 +1,39 @@
+body
+{
+    background-color:LightPink;
+}
+#adventures
+{
+    text-align:center;
+    font-size:30pt;
+    font-family:georgia;
+
+}
+tr
+{
+    height:00px;
+}
+td
+{
+    background-color:lightpink;
+    color:black;
+    font-size:12pt;
+    font-family:georgia;
+}
+.image2
+{
+    text-align:center;
+
+}
+a
+{
+    color:hotpink;
+}
+a:link,a:visited
+{
+    color:hotpink;
+}
+a:hover,a:active
+{
+    color:red;
+}

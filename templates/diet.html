@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+
+{% block title %}
+     Search
+{% endblock %}
+
+{% block main %}
+<h1 class="food">Schedule your diet</h1>
+<br>
+<form  action = "/diet"  method="POST">
+  Choose food:
+  <input list="food" name="food">
+  <datalist id="food">
+    <option value="Egg,boiled"><br>     
+    <option value="Broad Bean"><br>
+    <option value="Cottage Cheese"><br>
+    <option value="Feta Cheese"> <br>
+    <option value="Falafel"><br>
+    <option value="Lunchon"> <br>
+    <option value="TurkeyMeat"><br>
+    <option value="Oats"><br>
+    <option value="Bread"><br>
+    <option value="Halva(Halawa)"><br>
+    <option value="Jam"> <br>
+    <option value="Honey"><br>
+    <option value="Sugar"><br>
+    <option value="Milk"><br>
+    <option value="Tomato"><br>
+    <option value="Cucumber"><br>
+    <option value="Potato"<br>
+    <option value="Carrot"<br>
+    <option value="Tea"><br>
+    <option value="Nescafe"><br>
+    <option value="Coffee"> <br>
+    <option value="Orange Juice"><br>
+    <option value="Olive Oil"><br>
+    <option value=" Oil"><br>
+    <option value=" Butter"> <br>
+    <option value="Salt"><br>
+    <option value="Meat"><br>                
+    <option value="Grilled Chicken"> <br>
+    <option value="Fried chicken"><br>
+    <option value="French fries"<br>
+    <option value="Tilapia Fish"><br>
+    <option value="Mackerel Fish"><br>
+    <option value="Salmon Fish"><br>
+    <option value="Canned Tuna"><br>
+    <option value="Rice,Cooked"> <br>
+    <option value="Pasta,Cooked"><br>
+    <option value="Okra(Bamya)"><br>
+    <option value="Mulukhiyah"><br>
+    <option value="Peas(besela)"> <br>
+    <option value="Cowpea(Fasoliya)"> <br>
+    <option value="Spinach"> <br>
+    <option value="Taro(Qolqas)"><br>
+    <option value="Apple"> <br>
+    <option value="Orange"><br>
+    <option value="Banana"><br>                
+    <option value="Cantaloupe"><br>
+    <option value="Watermelon"><br>
+    <option value="Grapes"><br>
+    <option value="Strawberry"><br>
+    <option value="Muskmelon(Shamam)"><br>
+    <option value="Avocado"><br>
+    <option value="Pineapples"> <br>
+    <option value="Milk Chocolate"><br>
+    <option value="Dark Chocolate"><br>
+    <option value="Pop Corn"><br>
+    <option value="Chipse"><br>
+    <option value="White Egg"><br>
+    <option value="Chicken Breast"><br>
+    <option value="Egg,Fried"><br>
+    <option value="Liver"><br>
+    <option value="Apricots"><br>
+    <option value="Peach"><br>
+    <option value="Plums"><br>
+  </datalist>
+    <br>
+    <br>
+    <div>
+     Choose quantity in grams:  
+  <input class="quantity" name="quantity" placeholder="quantity in grams" type="text">
+    </div>
+    <br>
+    Add to which meal:
+  <input list="Meal" name="Meal">
+  <datalist id="Meal">
+    <option value="Breakfast"><br>     
+    <option value="Lunch"><br>
+    <option value="Dinner"><br>
+    <option value="Snacks"><br>
+    <br>
+  </datalist>
+    <br>
+    <br>
+    <p><b>Important note:</b> A medium piece of any kind of fruits or vegetables is about 100 grams and a medium cup is about 200-250 grams and one egg is about 50 grams.</p>
+    <p><b>Important note:</b>This diet is very beneficial for people who workout daily because it focuses on the amount of protein that a bodybuilder or a person who workout needs.
+    however,it can be used by normal people.</p>
+    <br>
+   
+  <button  id="diet" class="btn btn-primary" type="submit">Submit</button></a>
+</form>
+{% endblock %}

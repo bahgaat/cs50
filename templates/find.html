@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Plan
+{% endblock %}
+
+{% block main %}
+
+<form action="/search" method="GET">
+    <h1 class="mb-3">Plan</h1>
+    <table class="table">
+        <thead class= "thead-dark">
+        
+       
+        <tr>
+            <th>food</th>
+            <th>calories</th>
+            <th>carb</th>
+            <th>protein</th>
+            <th>fat</th>
+            
+        </tr>
+       
+        
+        </thead>
+        <tbody>
+       
+        <tr> 
+             
+             <td>{{dict.food}}</td>
+             <td>{{dict.calories}} calories</td> 
+             <td>{{dict.carb}} grams</td>
+             <td>{{dict.protein}} grams</td>
+             <td>{{dict.fat}} grams</td>
+             
+             
+        </tr>
+    
+        </tbody>
+            
+    </table>
+</form>
+{% endblock %}
+         
