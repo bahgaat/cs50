@@ -1,1 +1,2 @@
-# cs50-final-project
+# cs50 problem sets and final project
+
